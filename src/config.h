@@ -1,0 +1,22 @@
+#ifndef CONFIG
+#define CONFIG
+
+#define VCC P10_0     // Potential divider voltage for thermistor
+#define GND P10_3     // Potential divider ground for thermistor
+#define THERM P10_1   // Thermistor connected to this port
+
+#define R_REF 10000   // 10K resistor in potential divider
+
+// thermistor characteristic Steinhart Hart Coefficients
+
+/* A constant of NCP18XH103F03RB thermistor is */
+#define A_COEFF                          (float)(0.0009032679f)
+/* B constant of NCP18XH103F03RB thermistor is */
+#define B_COEFF                          (float)(0.000248772f)
+/* C constant of NCP18XH103F03RB thermistor is */
+#define C_COEFF                          (float)(0.0000002041094f)
+
+/* Zero Kelvin in degree C */
+#define ABSOLUTE_ZERO                    (float)(-273.15)
+
+#endif

@@ -5,15 +5,18 @@
  
 #include "mbed.h"
 #include "status.h"
+#include "sensors.h"
 #define MAIN_SLEEP 5000
 
 // main() runs in its own thread in the OS
 int main()
 {
     Thread startStatus;
+    Thread startSensors;
     printf(" System Initialisation in progress\n");
     while (true) {
         startStatus.start(callback(statusThread));
+        startSensors.start(callback(readSensorsTask));
         printf("  ....\nStarted \n");
         {
             while(true) ThisThread::sleep_for(MAIN_SLEEP);
