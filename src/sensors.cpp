@@ -6,8 +6,10 @@
 #include "mbed.h"
 #include "sensors.h"
 #include "config.h"
+#include "display.h"
 
 void readSensorsTask() {
+    message_t msg;
 
     DigitalOut vcc(VCC);
     DigitalOut gnd(GND);
@@ -26,7 +28,9 @@ void readSensorsTask() {
         float stEqn = (float32_t)((A_COEFF) + ((B_COEFF)*logrT) +
                                   ((C_COEFF)*pow((float64)logrT, (float32)3)));
         float temperatureC = (float32_t)(((1.0 / stEqn) + ABSOLUTE_ZERO) + 0.05);
-        printf("Temperature is %8.2f C\n", temperatureC );
+        sprintf(msg.buffer, "Temperature is %8.2f C\n", temperatureC );
+        msg.displayType = 7;
+        displayMessage(msg);
 
         ThisThread::sleep_for(100);
     }
