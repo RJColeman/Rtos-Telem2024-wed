@@ -7,6 +7,7 @@
 #include "config.h"
 #include "display.h"
 #include <string.h>
+#include "vt100.h"
 
 //char* strcpy(char*, char*);  // fool syntax checker
 
@@ -24,11 +25,28 @@ void displayMessage(message_t msg){
 }    
 
 void displayTask() {
+    //RIS; // reset terminal
+    //ThisThread::sleep_for(1000);
+    CLS; // clear the vt100 terminal screen
+    ThisThread::sleep_for(10);
+    BLUE_BOLD;
+
+    printf("\033[1;10HCity1082 Telemetry"); //Title at top middle
+    NORMAL;
     while (true) {
         osEvent evt = queue.get();
         if (evt.status == osEventMessage) {
             message_t *message = (message_t*)evt.value.p;
-            printf("%d %s\n", message->displayType, message->buffer);
+            switch(message->displayType) {
+                case TEMPERATURE_READING: {
+                    printf("\033[3;20H%s", message->buffer);
+                    break;
+                }
+                default: {
+                    printf("\033[20;1HNo definition detected %d %s\n", message->displayType, message->buffer);
+                }
+            }
+
             mpool.free(message);
         }
         ThisThread::sleep_for(10);

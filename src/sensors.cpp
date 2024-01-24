@@ -29,7 +29,7 @@ void readSensorsTask() {
                                   ((C_COEFF)*pow((float64)logrT, (float32)3)));
         float temperatureC = (float32_t)(((1.0 / stEqn) + ABSOLUTE_ZERO) + 0.05);
         sprintf(msg.buffer, "Temperature is %8.2f C\n", temperatureC );
-        msg.displayType = 7;
+        msg.displayType = TEMPERATURE_READING;
         displayMessage(msg);
 
         ThisThread::sleep_for(100);

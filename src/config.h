@@ -19,4 +19,11 @@
 /* Zero Kelvin in degree C */
 #define ABSOLUTE_ZERO                    (float)(-273.15)
 
+#define TEMPERATURE_READING (uint8_t)(0)
+#define TEMPERATURE_SETTING (uint8_t)(1)
+#define HEATER_STATE (uint8_t)(2)
+#define LIGHT_READING (uint8_t)(3)
+#define LIGHT_SETTING (uint8_t)(4)
+#define LIGHT_STATE (uint8_t)(5)
+
 #endif
