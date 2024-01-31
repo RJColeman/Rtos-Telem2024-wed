@@ -9,8 +9,15 @@
 #include <string.h>
 #include "vt100.h"
 
-//char* strcpy(char*, char*);  // fool syntax checker
-
+/* clang has a problem with strcpy so implemented our own function */
+int stringcpy(char* b, char* a) {
+    int i = 0;
+    while (a[i] != NULL) {
+        b[i] = a[i];
+        i++;
+    }
+    return i;
+}
 
 static MemoryPool<message_t, 32> mpool;
 static Queue<message_t, 32> queue;
@@ -18,7 +25,7 @@ static Queue<message_t, 32> queue;
 void displayMessage(message_t msg){
     message_t *message = mpool.alloc();
     if(message) {
-        strcpy ( message->buffer, msg.buffer);
+        stringcpy ( message->buffer, msg.buffer);
         message->displayType = msg.displayType;
         queue.put(message);
     }
@@ -30,6 +37,7 @@ void displayTask() {
     CLS; // clear the vt100 terminal screen
     ThisThread::sleep_for(10);
     BLUE_BOLD;
+    HIDE_CURSOR;
 
     printf("\033[1;10HCity1082 Telemetry"); //Title at top middle
     NORMAL;
