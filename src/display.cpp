@@ -30,7 +30,21 @@ void displayMessage(message_t msg){
         queue.put(message);
     }
 }    
+void displayPanel() {
+    HOME;
+    printf("┌───────────────────────────────────────────────────────────────────────────┐\n");
+    printf("│                                                                           │\n");
+    printf("├───────────────────────────┬─────────┬───────────────────────────┬─────────┤\n");
+    printf("│ Temperature Reading       │         │ Light Level               │         │\n");
+    printf("├───────────────────────────┼─────────┼───────────────────────────┼─────────┤\n");
+    printf("│ Temperature Setting       │         │ Light Level Setting       │         │\n");
+    printf("├───────────────────────────┼─────────┼───────────────────────────┼─────────┤\n");
+    printf("│ Heater State              │         │ Light State               │         │\n");
+    printf("├───────────────────────────┴─────────┴───────────────────────────┴─────────┤\n");
+    printf("│                                                                           │\n");
+    printf("└───────────────────────────────────────────────────────────────────────────┘\n");
 
+}
 void displayTask() {
     //RIS; // reset terminal
     //ThisThread::sleep_for(1000);
@@ -38,8 +52,8 @@ void displayTask() {
     ThisThread::sleep_for(10);
     BLUE_BOLD;
     HIDE_CURSOR;
-
-    printf("\033[1;10HCity1082 Telemetry"); //Title at top middle
+    displayPanel();
+    printf("\033[2;25HCity1082 Telemetry"); //Title at top middle
     NORMAL;
     while (true) {
         osEvent evt = queue.get();
@@ -47,11 +61,31 @@ void displayTask() {
             message_t *message = (message_t*)evt.value.p;
             switch(message->displayType) {
                 case TEMPERATURE_READING: {
-                    printf("\033[3;20H%s", message->buffer);
+                    printf("\033[4;31H%s", message->buffer);
+                    break;
+                }
+                case TEMPERATURE_SETTING: {
+                    printf("\033[6;31H%s", message->buffer);
+                    break;
+                }
+                case HEATER_STATE: {
+                    printf("\033[8;32H%s", message->buffer);
+                    break;
+                }
+                case LIGHT_READING: {
+                    printf("\033[4;70H%s", message->buffer);
+                    break;
+                }
+                case LIGHT_SETTING: {
+                    printf("\033[4;70H%s", message->buffer);
+                    break;
+                }
+                case LIGHT_STATE: {
+                    printf("\033[4;70H%s", message->buffer);
                     break;
                 }
                 default: {
-                    printf("\033[20;1HNo definition detected %d %s\n", message->displayType, message->buffer);
+                    printf("\033[20;3HNo definition detected %d %s\n", message->displayType, message->buffer);
                 }
             }
 

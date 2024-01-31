@@ -8,6 +8,8 @@
 #include "config.h"
 #include "display.h"
 
+myD myData;
+
 void readSensorsTask() {
     message_t msg;
 
@@ -17,7 +19,12 @@ void readSensorsTask() {
 
     vcc = 1;  // turn on the thermistor potential divider
     gnd = 0;
-
+    sprintf(msg.buffer, "%2.1f C ", myData.tempSet);
+    msg.displayType = TEMPERATURE_SETTING;
+    displayMessage(msg);
+    sprintf(msg.buffer, "%s", (myData.heaterState?" ON":"OFF"));
+    msg.displayType = HEATER_STATE;
+    displayMessage(msg);
     while (true) {
         float thermVolts = thermRead.read() * 2.4; // convert adc reading to volts
         float current = (3.3 - thermVolts) / R_REF;
@@ -28,7 +35,7 @@ void readSensorsTask() {
         float stEqn = (float32_t)((A_COEFF) + ((B_COEFF)*logrT) +
                                   ((C_COEFF)*pow((float64)logrT, (float32)3)));
         float temperatureC = (float32_t)(((1.0 / stEqn) + ABSOLUTE_ZERO) + 0.05);
-        sprintf(msg.buffer, "Temperature is %8.2f C\n", temperatureC );
+        sprintf(msg.buffer, "%2.1f C ", temperatureC );
         msg.displayType = TEMPERATURE_READING;
         displayMessage(msg);
 

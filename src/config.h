@@ -26,4 +26,13 @@
 #define LIGHT_SETTING (uint8_t)(4)
 #define LIGHT_STATE (uint8_t)(5)
 
+struct myD {
+    float temp;
+    float tempSet = 20.0; // default set temp is 20C
+    int heaterState = 0; // heater is on or off initially off
+    float light;
+    float lightSet = 50.0; // default light level 50%
+    int lightState = 0; // lights are off
+} ;
+
 #endif
