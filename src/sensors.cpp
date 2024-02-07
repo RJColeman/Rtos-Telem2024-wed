@@ -16,6 +16,7 @@ void readSensorsTask() {
     DigitalOut vcc(VCC);
     DigitalOut gnd(GND);
     AnalogIn thermRead(THERM);
+    AnalogIn lightRead(LDR);
 
     vcc = 1;  // turn on the thermistor potential divider
     gnd = 0;
@@ -37,6 +38,11 @@ void readSensorsTask() {
         float temperatureC = (float32_t)(((1.0 / stEqn) + ABSOLUTE_ZERO) + 0.05);
         sprintf(msg.buffer, "%2.1f C ", temperatureC );
         msg.displayType = TEMPERATURE_READING;
+        displayMessage(msg);
+        ThisThread::sleep_for(10);
+        float lightLevel = lightRead.read() * 100;// Ambient light level measurement 0-100%
+        sprintf(msg.buffer, "%3.1f %c ", lightLevel, '%' );
+        msg.displayType = LIGHT_READING;
         displayMessage(msg);
 
         ThisThread::sleep_for(100);

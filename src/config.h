@@ -4,6 +4,7 @@
 #define VCC P10_0     // Potential divider voltage for thermistor
 #define GND P10_3     // Potential divider ground for thermistor
 #define THERM P10_1   // Thermistor connected to this port
+#define LDR P10_2     // Light dependent resistor connection
 
 #define R_REF 10000   // 10K resistor in potential divider
 

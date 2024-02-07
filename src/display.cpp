@@ -73,15 +73,15 @@ void displayTask() {
                     break;
                 }
                 case LIGHT_READING: {
-                    printf("\033[4;70H%s", message->buffer);
+                    printf("\033[4;69H%s", message->buffer);
                     break;
                 }
                 case LIGHT_SETTING: {
-                    printf("\033[4;70H%s", message->buffer);
+                    printf("\033[6;69H%s", message->buffer);
                     break;
                 }
                 case LIGHT_STATE: {
-                    printf("\033[4;70H%s", message->buffer);
+                    printf("\033[8;70H%s", message->buffer);
                     break;
                 }
                 default: {
