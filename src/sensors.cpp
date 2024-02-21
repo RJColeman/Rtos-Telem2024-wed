@@ -26,6 +26,12 @@ void readSensorsTask() {
     sprintf(msg.buffer, "%s", (myData.heaterState?" ON":"OFF"));
     msg.displayType = HEATER_STATE;
     displayMessage(msg);
+    sprintf(msg.buffer, "%2.0f %c ", myData.lightSet, '%');
+    msg.displayType = LIGHT_SETTING;
+    displayMessage(msg);
+    sprintf(msg.buffer, "%s", (myData.lightState?" ON":"OFF"));
+    msg.displayType = LIGHT_STATE;
+    displayMessage(msg);
     while (true) {
         float thermVolts = thermRead.read() * 2.4; // convert adc reading to volts
         float current = (3.3 - thermVolts) / R_REF;
