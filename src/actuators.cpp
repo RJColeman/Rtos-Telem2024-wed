@@ -18,22 +18,22 @@ void setActuatorsTask() {
     lightLed = false;
 
     while (true) {
-        if ( myData.light > myData.lightSet + LIGHT_DZ) {
+        if ( myData.light > (myData.lightSet + LIGHT_DZ)) {
             // Turn the lights off it's too bright in here
             lightLed = false;
             myData.lightState = false;
         }
-        else if (myData.light < myData.lightSet - LIGHT_DZ) {
+        else if (myData.light < (myData.lightSet - LIGHT_DZ)) {
             // Turn the lights on its dark in here
             lightLed = true;
             myData.lightState = true;
         }
-        if ( myData.temp > myData.tempSet + HEATER_DZ) {
+        if ( myData.temp > (myData.tempSet + HEATER_DZ)) {
             // Turn the fire off it's too hot in here
             heaterLed = false;
             myData.heaterState = false;
         }
-        else if (myData.temp < myData.tempSet - HEATER_DZ) {
+        else if (myData.temp < (myData.tempSet - HEATER_DZ)) {
             // Turn the fire on its cold in here
             heaterLed = true;
             myData.heaterState = true;
