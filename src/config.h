@@ -26,6 +26,7 @@
 #define LIGHT_READING (uint8_t)(3)
 #define LIGHT_SETTING (uint8_t)(4)
 #define LIGHT_STATE (uint8_t)(5)
+#define STATUS_DISPLAY (uint8_t)(6)
 
 struct myD {
     float temp;

@@ -9,6 +9,8 @@
 #include <string.h>
 #include "vt100.h"
 
+Semaphore displayUse(1);
+
 /* clang has a problem with strcpy so implemented our own function */
 int stringcpy(char* b, char* a) {
     int i = 0;
@@ -23,17 +25,27 @@ static MemoryPool<message_t, 32> mpool;
 static Queue<message_t, 32> queue;
 
 void displayMessage(message_t msg){
+    while (displayUse.try_acquire() == false) {
+        ThisThread::sleep_for(1);
+    }
     message_t *message = mpool.alloc();
     if(message) {
         stringcpy ( message->buffer, msg.buffer);
         message->displayType = msg.displayType;
         queue.put(message);
     }
+    displayUse.release();
 }    
 void displayPanel() {
+    while (displayUse.try_acquire() == false) {
+        ThisThread::sleep_for(1);
+    }
+    CLS;
+    ThisThread::sleep_for(10);
     HOME;
+
     printf("┌───────────────────────────────────────────────────────────────────────────┐\n");
-    printf("│                                                                           │\n");
+    printf("│                           City1082 Telemetry                              │\n");
     printf("├───────────────────────────┬─────────┬───────────────────────────┬─────────┤\n");
     printf("│ Temperature Reading       │         │ Light Level               │         │\n");
     printf("├───────────────────────────┼─────────┼───────────────────────────┼─────────┤\n");
@@ -43,6 +55,7 @@ void displayPanel() {
     printf("├───────────────────────────┴─────────┴───────────────────────────┴─────────┤\n");
     printf("│                                                                           │\n");
     printf("└───────────────────────────────────────────────────────────────────────────┘\n");
+    displayUse.release();
 
 }
 void displayTask() {
@@ -53,7 +66,7 @@ void displayTask() {
     BLUE_BOLD;
     HIDE_CURSOR;
     displayPanel();
-    printf("\033[2;25HCity1082 Telemetry"); //Title at top middle
+//    printf("\033[2;25HCity1082 Telemetry"); //Title at top middle
     NORMAL;
     while (true) {
         osEvent evt = queue.get();
@@ -80,8 +93,12 @@ void displayTask() {
                     printf("\033[6;69H%s", message->buffer);
                     break;
                 }
-                case LIGHT_STATE: {
+                 case LIGHT_STATE: {
                     printf("\033[8;70H%s", message->buffer);
+                    break;
+                }
+               case STATUS_DISPLAY: {
+                    printf("\033[10;3H%s", message->buffer);
                     break;
                 }
                 default: {

@@ -8,5 +8,6 @@ typedef struct {
 
 /* prototype function calls */
 void displayMessage(message_t);
+void displayPanel();
 void displayTask();
 #endif
