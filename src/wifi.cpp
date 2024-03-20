@@ -58,6 +58,7 @@ const char topicMap[NUM_TOPICS][TOPIC_LEN] = {
 extern bool displayUp;
 uint32_t rxCount = 0;
 DigitalOut rxLed(RXLED);
+bool settingsChanged = true;
 
 void sendPub(int pTopic, float pValue) {
   message_t myMessage;
@@ -242,6 +243,16 @@ public:
     while (true) {
       ThisThread::sleep_for(10);
       client.yield(10);
+      if (settingsChanged) { // user set new temp or light thresholds
+        settingsChanged = false;
+        sprintf(myMessage.buffer, "%2.1f C ", myData.tempSet);
+        myMessage.displayType = TEMPERATURE_SETTING;
+        displayMessage(myMessage);
+        sprintf(myMessage.buffer, "%2.1f %c ", myData.lightSet, '%');
+        myMessage.displayType = LIGHT_SETTING;
+        displayMessage(myMessage);
+
+      }
       if (qSize > 0) {
         sprintf(buffer, "%f", myQueue[endQueue].value);
         sprintf(topicBuffer, "%s/%s", THING_NAME,
@@ -269,6 +280,7 @@ private:
     myData.lightSet = atoi(rxed);
     rxCount++;
     rxLed = !rxLed;
+    settingsChanged = true;
   }
 
 private:
@@ -281,6 +293,8 @@ private:
     myData.tempSet = atof(rxed);
     rxCount++;
     rxLed = !rxLed;
+    settingsChanged = true;
+
   }
 
 private:
