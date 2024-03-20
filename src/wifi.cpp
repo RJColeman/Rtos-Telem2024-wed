@@ -2,10 +2,11 @@
  * Thread to connect to wifi and the internet to send telemetry data
  * to an MQTT broker and receive threshold settings from the broker.
  */
+#include "mbed.h"
 #include "wifi.h"
 #include "config.h"
 #include "display.h"
-#include "mbed.h"
+
 
 extern struct MyD {
   float tempC;
@@ -136,12 +137,14 @@ public:
     myMessage.displayType = STATUS_DISPLAY;
     displayMessage(myMessage);
 
-    print_network_info();
+    //print_network_info();
 
     /* opening the socket only allocates resources */
     result = _socket.open(_net);
     if (result != 0) {
-      printf("Error! _socket.open() returned: %d\r\n", result);
+      sprintf(myMessage.buffer, "Error! _socket.open() returned: %d\r\n", result);
+      myMessage.displayType = STATUS_DISPLAY;
+      displayMessage(myMessage);
       return;
     }
     sprintf(myMessage.buffer, "Starting MQTT Reporting to %S\n",
@@ -180,7 +183,6 @@ public:
         displayMessage(myMessage);
       }
     }
-    displayPanel();
     rc = client.connect(data);
     if (rc == 0) {
       sprintf(myMessage.buffer, "Succesful connection of %s to Broker\n",
@@ -198,7 +200,7 @@ public:
     message.retained = false;
     message.dup = false;
     message.payload = (void *)buffer;
-    message.payloadlen = strlen(buffer) + 1;
+    message.payloadlen = stringlen(buffer) + 1;
 
     rc = client.publish(ANNOUNCE_TOPIC, message);
     if (rc == 0) {
@@ -215,22 +217,28 @@ public:
 
     rc = client.subscribe(LIGHT_SET_TOPIC, MQTT::QOS0, messageLightSetArrived);
 #ifdef DEBUG
-    if (rc != 0)
-      sprintf(buffer, "Subscription Error %d", rc);
-    else
-      sprintf(buffer, "Subscribed to %s", LIGHT_SET_TOPIC);
-    printf("%s", buffer);
-#endif
-    rc = client.subscribe(TEMP_SET_TOPIC, MQTT::QOS0, messageTempSetArrived);
+    if (rc != 0) {
+      sprintf(myMessage.buffer, "Subscription Error %d", rc); }
+    else {
+      sprintf(myMessage.buffer, "Subscribed to %s", LIGHT_SET_TOPIC); }
+
+    myMessage.displayType = STATUS_DISPLAY;
+    displayMessage(myMessage);
+#endif 
+   rc = client.subscribe(TEMP_SET_TOPIC, MQTT::QOS0, messageTempSetArrived);
 #ifdef DEBUG
     if (rc != 0)
-      sprintf(buffer, "Subscription Error %d", rc);
+      sprintf(myMessage.buffer, "Subscription Error %d", rc);
     else
-      sprintf(buffer, "Subscribed to %s", TEMP_SET_TOPIC);
-    printf("%s", buffer);
-#endif
+      sprintf(myMessage.buffer, "Subscribed to %s", TEMP_SET_TOPIC);
+    #endif
+    myMessage.displayType = STATUS_DISPLAY;
+    displayMessage(myMessage);
     rxLed = 1;
 
+    ThisThread::sleep_for(1000);
+    displayPanel();
+ 
     while (true) {
       ThisThread::sleep_for(10);
       client.yield(10);
@@ -244,7 +252,7 @@ public:
         }
 
         message.payload = (void *)buffer;
-        message.payloadlen = strlen(&buffer[0]) + 1;
+        message.payloadlen = stringlen(&buffer[0]) + 1;
 
         rc = client.publish(&topicBuffer[0], message);
       }
@@ -257,7 +265,7 @@ private:
     uint32_t len = md.message.payloadlen;
     char rxed[len + 1];
 
-    strncpy(&rxed[0], (char *)(&md.message.payload)[0], len);
+    nstringcpy(&rxed[0], (char *)(&md.message.payload)[0], len);
     myData.lightSet = atoi(rxed);
     rxCount++;
     rxLed = !rxLed;
@@ -269,7 +277,7 @@ private:
     uint32_t len = md.message.payloadlen;
     char rxed[len + 1];
 
-    strncpy(&rxed[0], (char *)(&md.message.payload)[0], len);
+    nstringcpy(&rxed[0], (char *)(&md.message.payload)[0], len);
     myData.tempSet = atof(rxed);
     rxCount++;
     rxLed = !rxLed;

@@ -10,4 +10,7 @@ typedef struct {
 void displayMessage(message_t);
 void displayPanel();
 void displayTask();
+int stringlen(char*);
+int stringcpy(char *, char *);
+int nstringcpy(char *, char *, int);
 #endif

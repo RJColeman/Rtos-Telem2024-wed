@@ -12,14 +12,35 @@
 Semaphore displayUse(1);
 
 /* clang has a problem with strcpy so implemented our own function */
-int stringcpy(char* b, char* a) {
+int stringlen(char* a) {
     int i = 0;
-    while (a[i] != NULL) {
+    while (a[i] != NULL) i++;
+    return i;
+}
+
+int nstringcpy(char* b, char* a, int last) { // local version of strcpy
+    int i = 0;
+
+    while (i < last) {
         b[i] = a[i];
         i++;
     }
     return i;
 }
+int stringcpy(char* b, char* a) { // local version of strcpy
+    int i = 0;
+    int last = stringlen(a);
+    while (i < last) {
+        b[i] = a[i];
+        i++;
+    }
+    while ((i < 80)) {
+        b[i] = 0;
+        i++;
+    }
+    return i;
+}
+
 
 static MemoryPool<message_t, 32> mpool;
 static Queue<message_t, 32> queue;
@@ -41,8 +62,9 @@ void displayPanel() {
         ThisThread::sleep_for(1);
     }
     CLS;
-    ThisThread::sleep_for(10);
+    ThisThread::sleep_for(100);
     HOME;
+    ThisThread::sleep_for(10);
 
     printf("┌───────────────────────────────────────────────────────────────────────────┐\n");
     printf("│                           City1082 Telemetry                              │\n");
@@ -55,6 +77,8 @@ void displayPanel() {
     printf("├───────────────────────────┴─────────┴───────────────────────────┴─────────┤\n");
     printf("│                                                                           │\n");
     printf("└───────────────────────────────────────────────────────────────────────────┘\n");
+    ThisThread::sleep_for(10);
+
     displayUse.release();
 
 }
