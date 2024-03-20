@@ -7,11 +7,13 @@
 #include "sensors.h"
 #include "config.h"
 #include "display.h"
+#include "wifi.h"
 
 myD myData;
 
 void readSensorsTask() {
     message_t msg;
+    int seconds10 = 0;
 
     DigitalOut vcc(VCC);
     DigitalOut gnd(GND);
@@ -53,6 +55,12 @@ void readSensorsTask() {
         msg.displayType = LIGHT_READING;
         displayMessage(msg);
 
-        ThisThread::sleep_for(100);
+        ThisThread::sleep_for(90);
+        if (seconds10++ == 100) { // ten second period
+          seconds10 = 0;
+          sendPub(TEMPERATURE_TOPIC, temperatureC);
+          sendPub(LIGHT_LEVEL_TOPIC, lightLevel);
+        } 
+
     }
 }
