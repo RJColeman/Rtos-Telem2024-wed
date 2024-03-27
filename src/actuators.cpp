@@ -7,6 +7,7 @@
 #include "display.h"
 #include "actuators.h"
 #include "config.h"
+#include "wifi.h"
 
 extern myD myData;
 
@@ -16,6 +17,7 @@ void setActuatorsTask() {
     DigitalOut heaterLed(HEATER_LED); // is the heater on?
     heaterLed = false;
     lightLed = false;
+    int seconds10 = 0;
 
     while (true) {
         if ( myData.light > (myData.lightSet + LIGHT_DZ)) {
@@ -45,6 +47,12 @@ void setActuatorsTask() {
         sprintf(msg.buffer, " %s ", myData.heaterState?" ON ":"OFF " );
         msg.displayType = HEATER_STATE;
         displayMessage(msg);
+        if (seconds10++ == 100) { // ten second period
+          seconds10 = 0;
+          sendPub(HEATER_STATE_TOPIC, myData.heaterState?1:0);
+          sendPub(LIGHT_STATE_TOPIC, myData.lightState?1:0);
+        } 
+
         ThisThread::sleep_for(100);        
 
     }

@@ -96,6 +96,9 @@ void displayTask() {
         osEvent evt = queue.get();
         if (evt.status == osEventMessage) {
             message_t *message = (message_t*)evt.value.p;
+            while (displayUse.try_acquire() == false) {
+                ThisThread::sleep_for(1);
+            }
             switch(message->displayType) {
                 case TEMPERATURE_READING: {
                     printf("\033[4;31H%s", message->buffer);
@@ -131,6 +134,8 @@ void displayTask() {
             }
 
             mpool.free(message);
+            displayUse.release();
+
         }
         ThisThread::sleep_for(10);
     }
