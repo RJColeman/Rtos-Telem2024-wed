@@ -19,6 +19,7 @@ void readSensorsTask() {
     DigitalOut gnd(GND);
     AnalogIn thermRead(THERM);
     AnalogIn lightRead(LDR);
+    AnalogIn humidityRead(HS);
 
     vcc = 1;  // turn on the thermistor potential divider
     gnd = 0;
@@ -28,11 +29,11 @@ void readSensorsTask() {
     sprintf(msg.buffer, "%s", (myData.heaterState?" ON":"OFF"));
     msg.displayType = HEATER_STATE;
     displayMessage(msg);
-    sprintf(msg.buffer, "%2.0f %c ", myData.lightSet, '%');
-    msg.displayType = LIGHT_SETTING;
+    sprintf(msg.buffer, "%2.0f %c ", myData.humiditySet, '%');
+    msg.displayType = HUMIDITY_SETTING;
     displayMessage(msg);
-    sprintf(msg.buffer, "%s", (myData.lightState?" ON":"OFF"));
-    msg.displayType = LIGHT_STATE;
+    sprintf(msg.buffer, "%s", (myData.fanState?" ON":"OFF"));
+    msg.displayType = FAN_STATE;
     displayMessage(msg);
     while (true) {
         float thermVolts = thermRead.read() * 2.4; // convert adc reading to volts
@@ -54,12 +55,19 @@ void readSensorsTask() {
         sprintf(msg.buffer, "%3.1f %c ", lightLevel, '%' );
         msg.displayType = LIGHT_READING;
         displayMessage(msg);
+        ThisThread::sleep_for(10);
+        float humidityLevel = humidityRead.read() * 100;// Ambient light level measurement 0-100%
+        myData.humidity = humidityLevel;
+        sprintf(msg.buffer, "%3.1f %c ", humidityLevel, '%' );
+        msg.displayType = HUMIDITY_READING;
+        displayMessage(msg);
 
         ThisThread::sleep_for(90);
         if (seconds10++ == 100) { // ten second period
           seconds10 = 0;
           sendPub(TEMPERATURE_TOPIC, temperatureC);
           sendPub(LIGHT_LEVEL_TOPIC, lightLevel);
+          sendPub(HUMIDITY_LEVEL_TOPIC, humidityLevel);
         } 
 
     }

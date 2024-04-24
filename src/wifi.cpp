@@ -15,6 +15,9 @@ extern struct MyD {
   float lightL;
   float lightSet; // default ambient light level setting
   int lightState; // 0 lights are off 1 for lights illuminated
+  float humidity; 
+  float humiditySet;
+  int fanState; 
 } myData;
 
 #include "mbed-trace/mbed_trace.h"
@@ -53,7 +56,7 @@ const char topicMap[NUM_TOPICS][TOPIC_LEN] = {
     "light",       "lightState", "lightSwitch", "redled",       "greenled",
     "blueled",     "announce",   "lightSet",    "latitude",     "longitude",
     "temperature", "tempSet",    "rxCount",     "txCount",      "time",
-    "statusled",   "orangeled",  "heaterState", "heaterSwitch", "humidity"};
+    "statusled",   "orangeled",  "heaterState", "heaterSwitch", "humidity", "fanSet"};
 
 extern bool displayUp;
 uint32_t rxCount = 0;
@@ -251,6 +254,9 @@ public:
         sprintf(myMessage.buffer, "%2.1f %c ", myData.lightSet, '%');
         myMessage.displayType = LIGHT_SETTING;
         displayMessage(myMessage);
+        sprintf(myMessage.buffer, "%2.1f %c ", myData.humiditySet, '%');
+        myMessage.displayType = HUMIDITY_SETTING;
+        displayMessage(myMessage);
 
       }
       if (qSize > 0) {
@@ -295,6 +301,19 @@ private:
     rxLed = !rxLed;
     settingsChanged = true;
 
+  }
+
+  private:
+  static void messageHumiditySetArrived(MQTT::MessageData &md) {
+    MQTT::Message &message = md.message;
+    uint32_t len = md.message.payloadlen;
+    char rxed[len + 1];
+
+    nstringcpy(&rxed[0], (char *)(&md.message.payload)[0], len);
+    myData.humiditySet = atoi(rxed);
+    rxCount++;
+    rxLed = !rxLed;
+    settingsChanged = true;
   }
 
 private:

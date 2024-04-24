@@ -2,7 +2,7 @@
 #define WIFI
 
 void wifiTask();
-constexpr int NUM_TOPICS = 20;
+constexpr int NUM_TOPICS = 21;
 constexpr int TOPIC_LEN = 80;
 void sendPub( int topic, float value);
 constexpr auto LIGHT_LEVEL_TOPIC = 0;
@@ -24,6 +24,7 @@ constexpr auto STATUSLED_TOPIC = 15;
 constexpr auto ORANGELED_TOPIC = 16;
 constexpr auto HEATER_STATE_TOPIC = 17;
 constexpr auto HEATER_SWITCH_TOPIC = 18;
-constexpr auto REL_HUMIDITY_TOPIC = 19;
+constexpr auto HUMIDITY_LEVEL_TOPIC = 19;
+constexpr auto FAN_STATE_TOPIC = 20;
 #define RXLED P0_5
 #endif

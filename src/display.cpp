@@ -66,17 +66,17 @@ void displayPanel() {
     HOME;
     ThisThread::sleep_for(10);
 
-    printf("┌───────────────────────────────────────────────────────────────────────────┐\n");
-    printf("│                           City1082 Telemetry                              │\n");
-    printf("├───────────────────────────┬─────────┬───────────────────────────┬─────────┤\n");
-    printf("│ Temperature Reading       │         │ Light Level               │         │\n");
-    printf("├───────────────────────────┼─────────┼───────────────────────────┼─────────┤\n");
-    printf("│ Temperature Setting       │         │ Light Level Setting       │         │\n");
-    printf("├───────────────────────────┼─────────┼───────────────────────────┼─────────┤\n");
-    printf("│ Heater State              │         │ Light State               │         │\n");
-    printf("├───────────────────────────┴─────────┴───────────────────────────┴─────────┤\n");
-    printf("│                                                                           │\n");
-    printf("└───────────────────────────────────────────────────────────────────────────┘\n");
+    printf("┌─────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐\n");
+    printf("│                                          City1082 Telemetry                                                     │\n");
+    printf("├───────────────────────────┬─────────┬───────────────────────────┬─────────┬───────────────────────────┬─────────┤\n");
+    printf("│ Temperature Reading       │         │ Light Level               │         │ Humidity Level            │         │\n");
+    printf("├───────────────────────────┼─────────┼───────────────────────────┼─────────┼───────────────────────────┼─────────┤\n");
+    printf("│ Temperature Setting       │         │ Light Level Setting       │         │ Humidity Level Setting    │         │\n");
+    printf("├───────────────────────────┼─────────┼───────────────────────────┼─────────┼───────────────────────────┼─────────┤\n");
+    printf("│ Heater State              │         │ Light State               │         │ Fan State                 │         │\n");
+    printf("├───────────────────────────┴─────────┴───────────────────────────┴─────────┴───────────────────────────┴─────────┤\n");
+    printf("│                                                                                                                 │\n");
+    printf("└─────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘\n");
     ThisThread::sleep_for(10);
 
     displayUse.release();
@@ -120,11 +120,23 @@ void displayTask() {
                     printf("\033[6;69H%s", message->buffer);
                     break;
                 }
-                 case LIGHT_STATE: {
+                case LIGHT_STATE: {
                     printf("\033[8;70H%s", message->buffer);
                     break;
                 }
-               case STATUS_DISPLAY: {
+                case HUMIDITY_READING: {
+                    printf("\033[4;107H%s", message->buffer);
+                    break;
+                }
+                case HUMIDITY_SETTING: {
+                    printf("\033[6;108H%s", message->buffer);
+                    break;
+                }
+                case FAN_STATE: {
+                    printf("\033[8;108H%s", message->buffer);
+                    break;
+                }
+                case STATUS_DISPLAY: {
                     printf("\033[10;3H%s", message->buffer);
                     break;
                 }

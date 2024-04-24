@@ -5,6 +5,7 @@
 #define GND P10_3     // Potential divider ground for thermistor
 #define THERM P10_1   // Thermistor connected to this port
 #define LDR P10_2     // Light dependent resistor connection
+#define HS P10_4      // humidity sensor connection
 
 #define R_REF 10000   // 10K resistor in potential divider
 
@@ -26,7 +27,10 @@
 #define LIGHT_READING (uint8_t)(3)
 #define LIGHT_SETTING (uint8_t)(4)
 #define LIGHT_STATE (uint8_t)(5)
-#define STATUS_DISPLAY (uint8_t)(6)
+#define HUMIDITY_READING (uint8_t)(6)
+#define HUMIDITY_SETTING (uint8_t)(7)
+#define FAN_STATE (uint8_t)(8)
+#define STATUS_DISPLAY (uint8_t)(9)
 
 struct myD {
     float temp;
@@ -35,17 +39,21 @@ struct myD {
     float light;
     float lightSet = 50.0; // default light level 50%
     int lightState = 0; // lights are off
+    float humidity;
+    float humiditySet = 60.0; // default humidity level 60%
+    int fanState = 0; // fan is initially off
 } ;
 
 #define BROKER          "192.168.1.176"
 #define PORT            1883
 
-#define THING_NAME      "asrThingy"
+#define THING_NAME      "rjcThingy"
 
 //#define TEMPERATURE_TOPIC   "/temperatureC"
 //#define LIGHT_LEVEL_TOPIC   "/lightlevel"
 #define ANNOUNCE_TOPIC      "/announce"
-#define LIGHT_SET_TOPIC "asrThingy/lightSet"
-#define TEMP_SET_TOPIC "asrThingy/tempSet"
+#define LIGHT_SET_TOPIC "rjcThingy/lightSet"
+#define TEMP_SET_TOPIC "rjcThingy/tempSet"
+#define HUMIDITY_SET_TOPIC "rjcThingy/humiditySet"
 
 #endif
