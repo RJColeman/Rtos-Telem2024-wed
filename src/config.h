@@ -1,11 +1,11 @@
 #ifndef CONFIG
 #define CONFIG
 
-#define VCC P10_0     // Potential divider voltage for thermistor
-#define GND P10_3     // Potential divider ground for thermistor
+#define VCC P10_3     // Potential divider voltage for thermistor
+#define GND P10_0     // Potential divider ground for thermistor
 #define THERM P10_1   // Thermistor connected to this port
-#define LDR P10_2     // Light dependent resistor connection
-#define HS P10_4      // humidity sensor connection
+#define LDR P10_4     // Light dependent resistor connection
+#define DHT P10_5      // humidity sensor connection
 
 #define R_REF 10000   // 10K resistor in potential divider
 

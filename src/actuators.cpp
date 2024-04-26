@@ -42,17 +42,21 @@ void setActuatorsTask() {
             heaterLed = true;
             myData.heaterState = true;
         }
-        if (myData.humidity > (myData.humiditySet + FAN_DZ)) {
+        if (myData.humidity < (myData.humiditySet - FAN_DZ)) {
           // Turn the fan off it's too dry in here
           fanLed = false;
           myData.fanState = false;
-        } else if (myData.humidity < (myData.humiditySet - FAN_DZ)) {
+        } else if (myData.humidity > (myData.humiditySet + FAN_DZ)) {
           // Turn the fan on its damp in here
           fanLed = true;
           myData.fanState = true;
         }
         sprintf(msg.buffer, " %s ", myData.lightState?" ON ":"OFF " );
         msg.displayType = LIGHT_STATE;
+        displayMessage(msg);
+        ThisThread::sleep_for(10);
+        sprintf(msg.buffer, " %s ", myData.heaterState?" ON ":"OFF " );
+        msg.displayType = HEATER_STATE;
         displayMessage(msg);
         ThisThread::sleep_for(10);
         sprintf(msg.buffer, " %s ", myData.fanState?" ON ":"OFF " );

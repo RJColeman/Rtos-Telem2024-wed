@@ -11,13 +11,13 @@
 extern struct MyD {
   float tempC;
   float tempSet;   // default thermostat setting
-  int heaterState; // 0 for off 1 for on
+  int heaterState; // 0 for off 1 for on for heater
   float lightL;
   float lightSet; // default ambient light level setting
   int lightState; // 0 lights are off 1 for lights illuminated
   float humidity; 
-  float humiditySet;
-  int fanState; 
+  float humiditySet; // default humidity setting
+  int fanState; // 0 for off 1 for on for fan setting
 } myData;
 
 #include "mbed-trace/mbed_trace.h"
@@ -246,7 +246,7 @@ public:
     while (true) {
       ThisThread::sleep_for(10);
       client.yield(10);
-      if (settingsChanged) { // user set new temp or light thresholds
+      if (settingsChanged) { // user set new temp, light or humidity thresholds
         settingsChanged = false;
         sprintf(myMessage.buffer, "%2.1f C ", myData.tempSet);
         myMessage.displayType = TEMPERATURE_SETTING;

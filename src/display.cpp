@@ -34,7 +34,7 @@ int stringcpy(char* b, char* a) { // local version of strcpy
         b[i] = a[i];
         i++;
     }
-    while ((i < 80)) {
+    while ((i < 90)) {
         b[i] = 0;
         i++;
     }
@@ -66,17 +66,17 @@ void displayPanel() {
     HOME;
     ThisThread::sleep_for(10);
 
-    printf("┌─────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐\n");
-    printf("│                                          City1082 Telemetry                                                     │\n");
-    printf("├───────────────────────────┬─────────┬───────────────────────────┬─────────┬───────────────────────────┬─────────┤\n");
-    printf("│ Temperature Reading       │         │ Light Level               │         │ Humidity Level            │         │\n");
-    printf("├───────────────────────────┼─────────┼───────────────────────────┼─────────┼───────────────────────────┼─────────┤\n");
-    printf("│ Temperature Setting       │         │ Light Level Setting       │         │ Humidity Level Setting    │         │\n");
-    printf("├───────────────────────────┼─────────┼───────────────────────────┼─────────┼───────────────────────────┼─────────┤\n");
-    printf("│ Heater State              │         │ Light State               │         │ Fan State                 │         │\n");
-    printf("├───────────────────────────┴─────────┴───────────────────────────┴─────────┴───────────────────────────┴─────────┤\n");
-    printf("│                                                                                                                 │\n");
-    printf("└─────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘\n");
+    printf("┌──────────────────────────────────────────────────────────────────────────────────┐\n");
+    printf("│                            City1082 Telemetry                                    │\n");
+    printf("├───────────────────┬───────┬───────────────────┬───────┬──────────────────┬───────┤\n");
+    printf("│Temperature Reading│       │Light Level        │       │Humidity Level    │       │\n");
+    printf("├───────────────────┼───────┼───────────────────┼───────┼──────────────────┼───────┤\n");
+    printf("│Temperature Setting│       │Light Level Setting│       │Humidity Setting  │       │\n");
+    printf("├───────────────────┼───────┼───────────────────┼───────┼──────────────────┼───────┤\n");
+    printf("│Heater State       │       │Light State        │       │Fan State         │       │\n");
+    printf("├───────────────────┴───────┴───────────────────┴───────┴──────────────────┴───────┤\n");
+    printf("│                                                                                  │\n");
+    printf("└──────────────────────────────────────────────────────────────────────────────────┘\n");
     ThisThread::sleep_for(10);
 
     displayUse.release();
@@ -101,39 +101,39 @@ void displayTask() {
             }
             switch(message->displayType) {
                 case TEMPERATURE_READING: {
-                    printf("\033[4;31H%s", message->buffer);
+                    printf("\033[4;23H%s", message->buffer);
                     break;
                 }
                 case TEMPERATURE_SETTING: {
-                    printf("\033[6;31H%s", message->buffer);
+                    printf("\033[6;23H%s", message->buffer);
                     break;
                 }
                 case HEATER_STATE: {
-                    printf("\033[8;32H%s", message->buffer);
+                    printf("\033[8;24H%s", message->buffer);
                     break;
                 }
                 case LIGHT_READING: {
-                    printf("\033[4;69H%s", message->buffer);
+                    printf("\033[4;51H%s", message->buffer);
                     break;
                 }
                 case LIGHT_SETTING: {
-                    printf("\033[6;69H%s", message->buffer);
+                    printf("\033[6;51H%s", message->buffer);
                     break;
                 }
                 case LIGHT_STATE: {
-                    printf("\033[8;70H%s", message->buffer);
+                    printf("\033[8;52H%s", message->buffer);
                     break;
                 }
                 case HUMIDITY_READING: {
-                    printf("\033[4;107H%s", message->buffer);
+                    printf("\033[4;78H%s", message->buffer);
                     break;
                 }
                 case HUMIDITY_SETTING: {
-                    printf("\033[6;108H%s", message->buffer);
+                    printf("\033[6;78H%s", message->buffer);
                     break;
                 }
                 case FAN_STATE: {
-                    printf("\033[8;108H%s", message->buffer);
+                    printf("\033[8;79H%s", message->buffer);
                     break;
                 }
                 case STATUS_DISPLAY: {
